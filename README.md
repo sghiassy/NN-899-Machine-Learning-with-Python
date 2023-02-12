@@ -2,3 +2,10 @@
 Part of FUN-42: Learn AI
 
 https://ghiassy.atlassian.net/browse/NN-899
+
+## Dev Setup
+
+### Install Python Dependencies
+
+`pip install -r requirements.txt`
+
