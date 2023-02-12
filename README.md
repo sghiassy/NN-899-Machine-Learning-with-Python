@@ -9,3 +9,6 @@ https://ghiassy.atlassian.net/browse/NN-899
 
 `pip install -r requirements.txt`
 
+### Running
+
+Run the program by choosing the lecture to run: `yarn 01`

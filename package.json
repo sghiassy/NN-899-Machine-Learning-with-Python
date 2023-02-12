@@ -1,0 +1,19 @@
+{
+  "name": "nn-899-machine-learning-with-python",
+  "version": "1.0.0",
+  "description": "Part of FUN-42: Learn AI",
+  "main": "index.js",
+  "scripts": {
+    "01": "python ./01-regression-intro/data.py"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sghiassy/NN-899-Machine-Learning-with-Python.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sghiassy/NN-899-Machine-Learning-with-Python/issues"
+  },
+  "homepage": "https://github.com/sghiassy/NN-899-Machine-Learning-with-Python#readme"
+}
