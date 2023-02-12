@@ -1,16 +1,21 @@
 import pandas as pd
 import quandl
 import math
+import datetime
 import numpy as np
 from sklearn import preprocessing, model_selection, svm
 from sklearn.linear_model import LinearRegression
+import matplotlib.pyplot as plt
+from matplotlib import style
+
+style.use('ggplot')
 
 path_prefix = './01-regression-intro/tmp_data/'
 
 print("Fetching Google Stock Prices")
-
-df = quandl.get("WIKI/GOOGL", authtoken="i69xthGji4B3cjxRQ1dJ")
-df.to_csv(path_prefix + '01.originaldata.csv', index=True)
+# data = quandl.get('WIKI/GOOGL', authtoken="i69xthGji4B3cjxRQ1dJ")
+# data.to_csv(path_prefix + '00.googl.csv')
+df = pd.read_csv(path_prefix + '00.googl.csv', index_col='Date', parse_dates=True)
 
 print(df.keys())
 
@@ -54,15 +59,20 @@ print(df.head())
 
 print("Start of 3rd Video")
 
-
 X = np.array(df.drop(['label'], 1))
-y = np.array(df['label'])
 X = preprocessing.scale(X)
+X_orig = X
+X = X[:-forecast_out]
+X_lately = X[forecast_out:]
+print('X_lately', X_lately)
+
+df.dropna(inplace=True)
+y = np.array(df['label'])
 y = np.array(df['label'])
 
 print(len(X), len(y))
 
-X_train, X_test, y_train, y_test = model_selection.train_test_split(X, y, test_size=0.2)
+X_train, X_test, y_train, y_test = model_selection.train_test_split(X_orig, y, test_size=0.2)
 
 print("X_train:")
 print(X_train)
@@ -73,7 +83,34 @@ print(y_train)
 print("\ny_test:")
 print(y_test)
 
-clf = LinearRegression()
+clf = LinearRegression(n_jobs=-1)
 clf.fit(X_train, y_train)
 accuracy = clf.score(X_test, y_test)
 print("Accuracy of the LinearRegression:", accuracy*100, "%")
+
+# Start of 5th Video: https://www.youtube.com/watch?v=QLVMqwpOLPk&list=PLQVvvaa0QuDfKTOs3Keq_kaG2P55YRn5v&index=5
+
+print("Start of 5th Video")
+
+forecast_set = clf.predict(X_lately)
+
+print("forecast_set", forecast_set)
+
+df['Forecast'] = np.nan
+
+last_date = df.iloc[-1].name
+last_unix = last_date.timestamp()
+one_day = 86400
+next_unix = last_unix + one_day
+
+for i in forecast_set:
+    next_date = datetime.datetime.fromtimestamp(next_unix)
+    next_unix += one_day
+    df.loc[next_date] = [np.nan for _ in range(len(df.columns)-1)] + [i]
+
+df['Adj. Close'].plot()
+df['Forecast'].plot()
+plt.legend(loc=4)
+plt.xlabel('Date')
+plt.ylabel('Price')
+plt.show()
